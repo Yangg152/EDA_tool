@@ -1,0 +1,115 @@
+<!doctype html><html lang=zh dir=ltr><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content='
+  VCS与Verdi
+  #
+
+
+  VCS与Verdi简介
+  #
+
+
+VCS全称Verilog Compiler Simulator，是Synoposys家的编译型Verilog模拟器，可编译 C、C++、Verilog、SystemVerilog 等文件，编译后生成 simv 可执行文件进行仿真。
+Verdi 最开始是由 novas 公司设计的，2012 年由 Synopsys 公司间接收购。除了源代码浏览器的标准功能（原理图、状态机图和波形比较），Verdi 平台还具有自动跟踪信号活动的高级功能。Verdi 主要用于仿真波形的查看，有助于快速定位和解决设计错误，加速 IC 设计流程。
+
+
+  Verilog测试激励
+  #
+
+在硬件设计中，Verilog测试激励（Testbench）用于验证设计的正确性。通过创建一个模拟环境，给设计提供输入并捕获输出结果。测试激励通常包含时钟、复位、输入信号的驱动，输出信号的监控，以及用于调试的打印信息等。
+Verilog中的测试激励可以使用各种系统函数和任务进行调试和输出。以下是一些常见的系统任务和函数。
+
+  常见系统任务和函数
+  #
+
+
+
+$timescale
+$timescale用于指定时间单位和时间精度的系统任务。它决定仿真中时间步长的单位，比如1ns/1ps表示时间单位为1纳秒，精度为1皮秒。它通常位于模块定义的开头。例如：
+`timescale 1ns / 1ps
+
+
+$display
+$display在仿真时打印消息到控制台，类似于C语言中的printf。它可以用于输出信号的状态、调试信息等。例如：
+$display("Time = %0t, Signal = %b", $time, signal);
+
+
+$monitor
+$monitor是用于持续监视信号变化的系统任务。它在仿真中每当监控的信号变化时自动打印出相应的消息。例如：
+$monitor("Time = %0t, Signal = %b", $time, signal);
+
+
+$finish
+$finish用于结束仿真。当仿真达到某个特定条件时，调用$finish可以终止仿真。例如：
+if (done) $finish;
+
+
+$time
+$time是返回当前仿真时间的系统函数。通常与$display、$monitor结合使用，以打印出时间信息。例如：
+$display("Current time: %0t", $time);
+
+
+$stop
+$stop暂停仿真，通常用于手动调试。与$finish不同的是，$stop不会完全结束仿真，只是暂时中断，可以通过仿真器继续。例如：'><meta name=theme-color media="(prefers-color-scheme: light)" content="#ffffff"><meta name=theme-color media="(prefers-color-scheme: dark)" content="#343a40"><meta name=color-scheme content="light dark"><meta property="og:url" content="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/vcs%E4%B8%8Everdi/%E8%AE%B2%E4%B9%89/"><meta property="og:site_name" content="XMU EDA教程"><meta property="og:title" content="XMU EDA教程"><meta property="og:description" content='VCS与Verdi#VCS与Verdi简介#VCS全称Verilog Compiler Simulator，是Synoposys家的编译型Verilog模拟器，可编译 C、C++、Verilog、SystemVerilog 等文件，编译后生成 simv 可执行文件进行仿真。 Verdi 最开始是由 novas 公司设计的，2012 年由 Synopsys 公司间接收购。除了源代码浏览器的标准功能（原理图、状态机图和波形比较），Verdi 平台还具有自动跟踪信号活动的高级功能。Verdi 主要用于仿真波形的查看，有助于快速定位和解决设计错误，加速 IC 设计流程。 Verilog测试激励#在硬件设计中，Verilog测试激励（Testbench）用于验证设计的正确性。通过创建一个模拟环境，给设计提供输入并捕获输出结果。测试激励通常包含时钟、复位、输入信号的驱动，输出信号的监控，以及用于调试的打印信息等。 Verilog中的测试激励可以使用各种系统函数和任务进行调试和输出。以下是一些常见的系统任务和函数。
+常见系统任务和函数#$timescale
+$timescale用于指定时间单位和时间精度的系统任务。它决定仿真中时间步长的单位，比如1ns/1ps表示时间单位为1纳秒，精度为1皮秒。它通常位于模块定义的开头。例如：
+`timescale 1ns / 1ps $display
+$display在仿真时打印消息到控制台，类似于C语言中的printf。它可以用于输出信号的状态、调试信息等。例如：
+$display("Time = %0t, Signal = %b", $time, signal); $monitor
+$monitor是用于持续监视信号变化的系统任务。它在仿真中每当监控的信号变化时自动打印出相应的消息。例如：
+$monitor("Time = %0t, Signal = %b", $time, signal); $finish
+$finish用于结束仿真。当仿真达到某个特定条件时，调用$finish可以终止仿真。例如：
+if (done) $finish; $time
+$time是返回当前仿真时间的系统函数。通常与$display、$monitor结合使用，以打印出时间信息。例如：
+$display("Current time: %0t", $time); $stop
+$stop暂停仿真，通常用于手动调试。与$finish不同的是，$stop不会完全结束仿真，只是暂时中断，可以通过仿真器继续。例如：'><meta property="og:locale" content="zh"><meta property="og:type" content="website"><title>讲义 | XMU EDA教程</title>
+<link rel=icon href=/favicon.png><link rel=manifest href=/manifest.json><link rel=canonical href=http://localhost:1313/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/vcs%E4%B8%8Everdi/%E8%AE%B2%E4%B9%89/><link rel=stylesheet href=/book.min.6c8b9d2a1fc95075ed7da46ca81060b39add8fff6741ac51259f768929281e2c.css integrity="sha256-bIudKh/JUHXtfaRsqBBgs5rdj/9nQaxRJZ92iSkoHiw=" crossorigin=anonymous><script defer src=/fuse.min.js></script><script defer src=/en.search.min.f7bf90fc19a0b283f87182a7d14d7c0ce8d9eca3432bd6bca88daa2480eba0c6.js integrity="sha256-97+Q/BmgsoP4cYKn0U18DOjZ7KNDK9a8qI2qJIDroMY=" crossorigin=anonymous></script><link rel=alternate type=application/rss+xml href=http://localhost:1313/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/vcs%E4%B8%8Everdi/%E8%AE%B2%E4%B9%89/index.xml title="XMU EDA教程"></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/><span>XMU EDA教程</span></a></h2><div class="book-search hidden"><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><script>document.querySelector(".book-search").classList.remove("hidden")</script><ul><li class=book-section-flat><a href=/docs/%E4%BB%8B%E7%BB%8D/>介绍</a><ul></ul></li><li class=book-section-flat><a href=/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/>前端设计</a><ul><li><input type=checkbox id=section-ff0ad6e9724d030785a4407217b340a0 class=toggle checked>
+<label for=section-ff0ad6e9724d030785a4407217b340a0 class="flex justify-between"><a role=button>Vcs与 Verdi</a></label><ul><li><a href=/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/vcs%E4%B8%8Everdi/%E8%AE%B2%E4%B9%89/ class=active>讲义</a><ul></ul></li><li><input type=checkbox id=section-0665cfb46fbf6677897dcb2e5be21998 class=toggle>
+<label for=section-0665cfb46fbf6677897dcb2e5be21998 class="flex justify-between"><a role=button>实验</a></label><ul></ul></li></ul></li></ul></li><li class=book-section-flat><a href=/docs/%E5%90%8E%E7%AB%AF%E8%AE%BE%E8%AE%A1/>后端设计</a><ul><li><a href=/docs/%E5%90%8E%E7%AB%AF%E8%AE%BE%E8%AE%A1/table-of-contents/>Table of Contents</a><ul><li><a href=/docs/%E5%90%8E%E7%AB%AF%E8%AE%BE%E8%AE%A1/table-of-contents/with-toc/>With ToC</a></li><li><a href=/docs/%E5%90%8E%E7%AB%AF%E8%AE%BE%E8%AE%A1/table-of-contents/without-toc/>Without ToC</a></li></ul></li><li><input type=checkbox id=section-3950703a7fe71671a1d5574433599622 class=toggle>
+<label for=section-3950703a7fe71671a1d5574433599622 class="flex justify-between"><a role=button>Collapsed</a></label><ul><li><a href=/docs/%E5%90%8E%E7%AB%AF%E8%AE%BE%E8%AE%A1/collapsed/3rd-level/>3rd Level</a><ul><li><a href=/docs/%E5%90%8E%E7%AB%AF%E8%AE%BE%E8%AE%A1/collapsed/3rd-level/4th-level/>4th Level</a></li></ul></li></ul></li></ul></li><li class=book-section-flat><span>Shortcodes</span><ul><li><a href=/docs/shortcodes/buttons/>Buttons</a></li><li><a href=/docs/shortcodes/columns/>Columns</a></li><li><a href=/docs/shortcodes/details/>Details</a></li><li><a href=/docs/shortcodes/hints/>Hints</a></li><li><a href=/docs/shortcodes/mermaid/>Mermaid</a></li><li><a href=/docs/shortcodes/tabs/>Tabs</a></li><li><a href=/docs/shortcodes/katex/>KaTeX</a></li></ul></li></ul><ul><li><a href=/posts/>Blog</a></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu></label><h3>讲义</h3><label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#vcs与verdi简介>VCS与Verdi简介</a></li><li><a href=#verilog测试激励>Verilog测试激励</a><ul><li><a href=#常见系统任务和函数>常见系统任务和函数</a></li><li><a href=#检查verilog仿真结果>检查Verilog仿真结果</a></li></ul></li></ul></nav></aside></header><article class="markdown book-article"><h1 id=vcs与verdi>VCS与Verdi
+<a class=anchor href=#vcs%e4%b8%8everdi>#</a></h1><h2 id=vcs与verdi简介>VCS与Verdi简介
+<a class=anchor href=#vcs%e4%b8%8everdi%e7%ae%80%e4%bb%8b>#</a></h2><ul><li>VCS全称Verilog Compiler Simulator，是Synoposys家的编译型Verilog模拟器，可编译 C、C++、Verilog、SystemVerilog 等文件，编译后生成 simv 可执行文件进行仿真。</li><li>Verdi 最开始是由 novas 公司设计的，2012 年由 Synopsys 公司间接收购。除了源代码浏览器的标准功能（原理图、状态机图和波形比较），Verdi 平台还具有自动跟踪信号活动的高级功能。Verdi 主要用于仿真波形的查看，有助于快速定位和解决设计错误，加速 IC 设计流程。</li></ul><h2 id=verilog测试激励>Verilog测试激励
+<a class=anchor href=#verilog%e6%b5%8b%e8%af%95%e6%bf%80%e5%8a%b1>#</a></h2><p>在硬件设计中，Verilog测试激励（Testbench）用于验证设计的正确性。通过创建一个模拟环境，给设计提供输入并捕获输出结果。测试激励通常包含时钟、复位、输入信号的驱动，输出信号的监控，以及用于调试的打印信息等。
+Verilog中的测试激励可以使用各种系统函数和任务进行调试和输出。以下是一些常见的系统任务和函数。</p><h3 id=常见系统任务和函数>常见系统任务和函数
+<a class=anchor href=#%e5%b8%b8%e8%a7%81%e7%b3%bb%e7%bb%9f%e4%bb%bb%e5%8a%a1%e5%92%8c%e5%87%bd%e6%95%b0>#</a></h3><ul><li><p><code>$timescale</code><br><code>$timescale</code>用于指定时间单位和时间精度的系统任务。它决定仿真中时间步长的单位，比如<code>1ns/1ps</code>表示时间单位为1纳秒，精度为1皮秒。它通常位于模块定义的开头。例如：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-verilog data-lang=verilog><span style=display:flex><span><span style=color:#66d9ef>`timescale</span> <span style=color:#ae81ff>1</span>ns <span style=color:#f92672>/</span> <span style=color:#ae81ff>1</span>ps
+</span></span></code></pre></div></li><li><p><code>$display</code><br><code>$display</code>在仿真时打印消息到控制台，类似于C语言中的<code>printf</code>。它可以用于输出信号的状态、调试信息等。例如：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-verilog data-lang=verilog><span style=display:flex><span>$display(<span style=color:#e6db74>&#34;Time = %0t, Signal = %b&#34;</span>, $time, signal);
+</span></span></code></pre></div></li><li><p><code>$monitor</code><br><code>$monitor</code>是用于持续监视信号变化的系统任务。它在仿真中每当监控的信号变化时自动打印出相应的消息。例如：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-verilog data-lang=verilog><span style=display:flex><span>$monitor(<span style=color:#e6db74>&#34;Time = %0t, Signal = %b&#34;</span>, $time, signal);
+</span></span></code></pre></div></li><li><p><code>$finish</code><br><code>$finish</code>用于结束仿真。当仿真达到某个特定条件时，调用<code>$finish</code>可以终止仿真。例如：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-verilog data-lang=verilog><span style=display:flex><span><span style=color:#66d9ef>if</span> (done) $finish;
+</span></span></code></pre></div></li><li><p><code>$time</code><br><code>$time</code>是返回当前仿真时间的系统函数。通常与<code>$display</code>、<code>$monitor</code>结合使用，以打印出时间信息。例如：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-verilog data-lang=verilog><span style=display:flex><span>$display(<span style=color:#e6db74>&#34;Current time: %0t&#34;</span>, $time);
+</span></span></code></pre></div></li><li><p><code>$stop</code><br><code>$stop</code>暂停仿真，通常用于手动调试。与<code>$finish</code>不同的是，<code>$stop</code>不会完全结束仿真，只是暂时中断，可以通过仿真器继续。例如：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-verilog data-lang=verilog><span style=display:flex><span><span style=color:#66d9ef>if</span> (error_condition) $stop;
+</span></span></code></pre></div></li></ul><h4 id=示例>示例
+<a class=anchor href=#%e7%a4%ba%e4%be%8b>#</a></h4><p>以下是一个简单的Verilog测试激励示例，它测试一个简单的计数器模块。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-verilog data-lang=verilog><span style=display:flex><span><span style=color:#66d9ef>`timescale</span> <span style=color:#ae81ff>1</span>ns <span style=color:#f92672>/</span> <span style=color:#ae81ff>1</span>ps
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>module</span> tb_counter();
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>reg</span> clk;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>reg</span> rst;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>wire</span> [<span style=color:#ae81ff>3</span><span style=color:#f92672>:</span><span style=color:#ae81ff>0</span>] count;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 实例化被测模块
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  counter dut (
+</span></span><span style=display:flex><span>    .clk(clk),
+</span></span><span style=display:flex><span>    .rst(rst),
+</span></span><span style=display:flex><span>    .count(count)
+</span></span><span style=display:flex><span>  );
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 生成时钟
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>always</span> #<span style=color:#ae81ff>5</span> clk <span style=color:#f92672>=</span> <span style=color:#f92672>~</span>clk;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>initial</span> <span style=color:#66d9ef>begin</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 初始化信号
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    clk <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>    rst <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>    #<span style=color:#ae81ff>10</span> rst <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;  <span style=color:#75715e>// 复位信号拉低
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 仿真持续100ns后结束
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    #<span style=color:#ae81ff>100</span> $finish;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 监控输出
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>initial</span> <span style=color:#66d9ef>begin</span>
+</span></span><span style=display:flex><span>    $monitor(<span style=color:#e6db74>&#34;Time: %0t, Reset: %b, Count: %d&#34;</span>, $time, rst, count);
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>endmodule</span>
+</span></span></code></pre></div><p>这个测试激励模块使用了<code>$timescale</code>设置时间单位和精度，<code>$monitor</code>来监视输出信号的变化，并通过<code>$finish</code>在100纳秒后终止仿真。</p><h3 id=检查verilog仿真结果>检查Verilog仿真结果
+<a class=anchor href=#%e6%a3%80%e6%9f%a5verilog%e4%bb%bf%e7%9c%9f%e7%bb%93%e6%9e%9c>#</a></h3><ul><li>$display
+项目后期可以用log进行debug比较方便</li><li>看波形（VCD或FSDB）
+项目早期使用，各种信号比较详细</li></ul><p>波形方式：</p><ul><li><p>VCD波形</p><ul><li><strong>概述</strong>：VCD（Value Change Dump）是IEEE标准的波形文件格式，广泛支持，适用于各种仿真工具。</li><li><strong>生成方法</strong>：<ul><li>使用 <code>$dumpfile</code> 指定输出的VCD文件名，例如：<code>$dumpfile("waveform.vcd");</code>。</li><li>使用 <code>$dumpvars</code> 指定需要记录的信号，一般在仿真开始时调用，例：<code>$dumpvars(0, top_module);</code>。</li></ul></li><li><strong>优点</strong>：<ul><li>标准化格式，兼容性好，支持多种仿真工具查看波形。</li><li>生成较为简单，适合小型设计及快速仿真验证。</li></ul></li><li><strong>缺点</strong>：<ul><li>文件体积较大，仿真时间长时会消耗大量磁盘空间。</li><li>支持的信号类型和压缩率有限，难以处理大规模设计。</li></ul></li><li><strong>使用建议</strong>：<ul><li>在项目早期阶段或较小规模设计中，使用VCD格式方便快速查看和分析波形变化。</li><li>通过限制 <code>$dumpvars</code> 中的层级或具体信号范围来控制文件大小。</li></ul></li></ul></li><li><p>FSDB波形</p><ul><li><strong>概述</strong>：FSDB（Fast Signal Database）是Synopsys的专有波形格式，通常用于较大规模设计和复杂仿真，配合Verdi等工具使用。</li><li><strong>生成方法</strong>：<ul><li>使用 <code>$fsdbDumpfile</code> 来设置输出文件，例如：<code>$fsdbDumpfile("waveform.fsdb");</code>。</li><li>使用 <code>$fsdbDumpvars</code> 指定需要记录的信号，例如：<code>$fsdbDumpvars(0, top_module);</code>。</li></ul></li><li><strong>优点</strong>：<ul><li>文件体积较小，支持高效的信号压缩，能够记录更多信息，适合大规模设计。</li><li>支持更复杂的信号类型和详细的信号数据，查看精度更高。</li><li>与Verdi等调试工具高度集成，能够使用强大的波形浏览、信号分析、故障定位等功能。</li></ul></li><li><strong>缺点</strong>：<ul><li>是专有格式，需要专用工具（如Verdi）才能查看，兼容性相对较差。</li><li>生成FSDB文件可能需要消耗较多资源，仿真速度可能稍有影响。</li></ul></li><li><strong>使用建议</strong>：<ul><li>在项目后期和复杂设计中使用FSDB格式，结合Verdi工具分析细致波形和交互关系。</li><li>利用Verdi的过滤和筛选功能查看关键信号，减少不必要的波形数据</li></ul></li></ul></li></ul></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div><script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#vcs与verdi简介>VCS与Verdi简介</a></li><li><a href=#verilog测试激励>Verilog测试激励</a><ul><li><a href=#常见系统任务和函数>常见系统任务和函数</a></li><li><a href=#检查verilog仿真结果>检查Verilog仿真结果</a></li></ul></li></ul></nav></div></aside></main></body></html>
