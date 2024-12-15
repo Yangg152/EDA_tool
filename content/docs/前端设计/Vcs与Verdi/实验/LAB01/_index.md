@@ -7,7 +7,9 @@ weight: 23
 
 测试文件 ： counter_tb.v
 
-**要VCS与Verdi联合仿真，需要在testbench里面必须加入``ifdef FSDB到endif`的代码，这样才能生成fsdb文件提供Verdi读取，不然不会输出波形**
+{{< hint danger >}}
+要VCS与Verdi联合仿真，需要在testbench里面加入``ifdef FSDB到endif`的代码，这样才能生成fsdb文件提供Verdi读取，不然不会输出波形
+{{< /hint >}}
 
 ## 实验步骤
 

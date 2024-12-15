@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>XMU EDA教程</title>
+    <link>http://localhost:1313/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/dc%E7%BB%BC%E5%90%88/%E5%AE%9E%E9%AA%8C/</link>
+    <description>Recent content on XMU EDA教程</description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <atom:link href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/dc%E7%BB%BC%E5%90%88/%E5%AE%9E%E9%AA%8C/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>

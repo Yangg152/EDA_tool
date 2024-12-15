@@ -1,3 +1,9 @@
 baseURL = 'https://yangg152.cn/'
 languageCode = 'zh'
 title = 'XMU EDA教程'
+theme = "hugo-book"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
