@@ -125,23 +125,10 @@ FIFO深度设置为`1`即可保证数据传输的正确性。
 
 ---
 
-### 5. 异步FIFO 参数与信号定义
-| 信号         | 说明                                     |
-|--------------|------------------------------------------|
-| **clk**      | 系统时钟                                 |
-| **rstn**     | 系统复位信号（低电平有效）               |
-| **wr_en**    | 写使能信号，控制数据写入                 |
-| **wr_data**  | 写入数据                                 |
-| **fifo_full**| FIFO 满标志位，表示 FIFO 已满            |
-| **rd_en**    | 读使能信号，控制数据读出                 |
-| **rd_data**  | 读出数据                                 |
-| **fifo_empty**| FIFO 空标志位，表示 FIFO 为空           |
-| **读指针**   | 指向下一个要读出的地址                  |
-| **写指针**   | 指向下一个要写入的地址                  |
-
-## 6. 异步 FIFO 基本接口定义
+## 5. 异步 FIFO 基本接口定义
+异步fifo的接口信号与同步fifo基本一致，但是要注意跨时钟域的处理。
 ```verilog
-module async_fifo#(parameter BUF_SIZE=512, BUF_WIDTH=10) (
+module async_fifo#(parameter BUF_SIZE=？, BUF_WIDTH=？) (
     input                      i_clk,       // 系统时钟
     input                      i_rst,       // 复位信号
     input                      i_w_en,      // 写使能信号
@@ -154,68 +141,6 @@ module async_fifo#(parameter BUF_SIZE=512, BUF_WIDTH=10) (
 );
 
     // 在此添加设计逻辑
-
-endmodule
-```
-
-## 7. 双端口RAM
-双端口ram介绍：
-双端口RAM用于存储数据
-```verilog
-module ram_dual(RST, CLK_R, CLK_W, RD_EN, WRT_EN, ADDR_R, ADDR_W, DATA_WRT, DATA_RD);
-
-parameter   DATA_WIDTH = 8;
-parameter   RAM_DEEP   = 128;
-parameter   ADDR_WIDTH = 7;
-
-input		CLK_R;
-input		CLK_W;
-input		RST;
-input		RD_EN;
-input		WRT_EN;
-
-input	[ADDR_WIDTH-1:0]    ADDR_R;
-input	[ADDR_WIDTH-1:0]    ADDR_W;
-input	[DATA_WIDTH-1:0]    DATA_WRT;
-
-output	[DATA_WIDTH-1:0]    DATA_RD;
-
-reg	[DATA_WIDTH-1:0]    DATA_RD;
-reg	[DATA_WIDTH-1:0]    MEM	[0:RAM_DEEP-1];
-
-// reg	[ADDR_WIDTH:0]    i;
-// always @(posedge CLK_W or posedge RST) begin
-//     if (RST) begin
-// 	for(i=0; i<RAM_DEEP; i=i+1) begin
-// 	    MEM[i] <= 0;
-// 	    // #0.001;
-// 	    // $display("iteration is %d", i);
-// 	end
-//     end
-//     else if (WRT_EN)
-// 	MEM[ADDR_W] <= DATA_WRT;
-// end
-
-generate
-genvar i;
-for (i=0; i<RAM_DEEP; i=i+1)
-begin: MEM_GEN
-    always @(posedge CLK_W or posedge RST) begin
-	if (RST)
-	    MEM[i] <= 0;
-	else if (WRT_EN)
-	    MEM[i] <= (ADDR_W == i) ? DATA_WRT : MEM[i];
-    end
-end
-endgenerate
-
-
-always @(posedge CLK_R or posedge RST) begin
-    if (RST)
-	DATA_RD <= 0;
-    else if (RD_EN)
-	DATA_RD <= MEM[ADDR_R];
-end
 
 endmodule
 ```

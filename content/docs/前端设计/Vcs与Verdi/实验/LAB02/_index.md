@@ -40,8 +40,73 @@ FIFO 是一种**先进先出**的数据缓存器，与普通存储器的区别�
                           |     |
                        写指针   读指针
 ```
+### 1.3 双口 RAM
+双口 RAM（Dual-Port RAM）是一种支持两个独立端口的存储器，可以同时进行读操作和写操作。在同步 FIFO 设计中，双口 RAM 主要用于实现高效的数据存储和访问，其主要作用包括：
+- 同时读写：读和写操作可以在同一个时钟周期内独立进行，互不干扰。写指针控制写入数据，读指针控制读取数据。
+- 避免冲突：双口 RAM 提供了两个独立的地址端口（一个用于写入、一个用于读取），因此能够避免传统单端口 RAM 只能分时读写的问题。
+高效的数据缓存：FIFO 中的数据通过写指针依次写入双口 RAM，通过读指针顺序读出，确保数据先进先出（FIFO）的特性。
+双端RAM的代码：
+```verilog
+module ram_dual(RST, CLK_R, CLK_W, RD_EN, WRT_EN, ADDR_R, ADDR_W, DATA_WRT, DATA_RD);
 
-### 1.3 FIFO 参数与信号定义
+parameter   DATA_WIDTH = 8;
+parameter   RAM_DEEP   = 128;
+parameter   ADDR_WIDTH = 7;
+
+input		CLK_R;
+input		CLK_W;
+input		RST;
+input		RD_EN;
+input		WRT_EN;
+
+input	[ADDR_WIDTH-1:0]    ADDR_R;
+input	[ADDR_WIDTH-1:0]    ADDR_W;
+input	[DATA_WIDTH-1:0]    DATA_WRT;
+
+output	[DATA_WIDTH-1:0]    DATA_RD;
+
+reg	[DATA_WIDTH-1:0]    DATA_RD;
+reg	[DATA_WIDTH-1:0]    MEM	[0:RAM_DEEP-1];
+
+// reg	[ADDR_WIDTH:0]    i;
+// always @(posedge CLK_W or posedge RST) begin
+//     if (RST) begin
+// 	for(i=0; i<RAM_DEEP; i=i+1) begin
+// 	    MEM[i] <= 0;
+// 	    // #0.001;
+// 	    // $display("iteration is %d", i);
+// 	end
+//     end
+//     else if (WRT_EN)
+// 	MEM[ADDR_W] <= DATA_WRT;
+// end
+
+generate
+genvar i;
+for (i=0; i<RAM_DEEP; i=i+1)
+begin: MEM_GEN
+    always @(posedge CLK_W or posedge RST) begin
+	if (RST)
+	    MEM[i] <= 0;
+	else if (WRT_EN)
+	    MEM[i] <= (ADDR_W == i) ? DATA_WRT : MEM[i];
+    end
+end
+endgenerate
+
+
+always @(posedge CLK_R or posedge RST) begin
+    if (RST)
+	DATA_RD <= 0;
+    else if (RD_EN)
+	DATA_RD <= MEM[ADDR_R];
+end
+
+endmodule
+```
+
+
+### 1.4 FIFO 参数与信号定义
 | 信号         | 说明                                     |
 |--------------|------------------------------------------|
 | **clk**      | 系统时钟                                 |
@@ -55,7 +120,7 @@ FIFO 是一种**先进先出**的数据缓存器，与普通存储器的区别�
 | **读指针**   | 指向下一个要读出的地址                  |
 | **写指针**   | 指向下一个要写入的地址                  |
 
-### 1.4 FIFO 设计原则
+### 1.5 FIFO 设计原则
 1. **写入溢出（Overflow）**：
    - 禁止在 FIFO 满时继续写入数据。
 2. **读取溢出（Underflow）**：
@@ -69,7 +134,7 @@ FIFO 是一种**先进先出**的数据缓存器，与普通存储器的区别�
 
 ## 2. 同步 FIFO 基本接口定义
 ```verilog
-module sync_fifo#(parameter BUF_SIZE=8, BUF_WIDTH=8) (
+module sync_fifo#(parameter BUF_SIZE=？, BUF_WIDTH=？) (
     input                      i_clk,       // 系统时钟
     input                      i_rst,       // 复位信号
     input                      i_w_en,      // 写使能信号
@@ -89,7 +154,7 @@ endmodule
 ---
 
 ## 3. 设计实现要求
-1. 完成 `sync_fifo` 模块的 Verilog 代码设计。
+1. 完成 `sync_fifo` 模块的 Verilog 代码设计，宽度为8，深度为8。
 2. 确保以下功能：
    - 写入数据时，写指针自动更新。
    - 读取数据时，读指针自动更新。
