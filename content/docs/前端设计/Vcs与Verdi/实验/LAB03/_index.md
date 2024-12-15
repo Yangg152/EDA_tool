@@ -145,10 +145,9 @@ module async_fifo#(parameter BUF_SIZE=？, BUF_WIDTH=？) (
 endmodule
 ```
 
-## 8. 设计实现要求
+## 6. 设计实现要求
 1. 完成 `async_fifo` 模块的 Verilog 代码设计,要求宽度为512，深度为10。
-2. 例化双端口RAM用于存储数据。
-3. 编写**测试文件**（Testbench）验证设计。
-4. 最终检查：使用给定的 TB 文件验证设计的正确性。
+2. 编写**测试文件**（Testbench）验证设计。
+3. 最终检查：使用给定的 TB 文件验证设计的正确性。
 
 
