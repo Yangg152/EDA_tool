@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="
+  形式验证
+  #
+
+
+  形式验证介绍
+  #
+
+在IC设计中，需要通过DC工具将设计的RTL代码转换为网表，为了验证所生成的网表与RTL的功能是否一致，需要进行形式验证，形式验证是一种等价性检查。
+它是一种静态的比较，会遍历所有的组合保证逻辑等价性。
+
+  形式验证的位置
+  #
+
+只要设计发生改变(对代码进行改动)
+
+综合的网表与RTL对比做形式验证。保证综合过程没有逻辑错误。保证综合后的网表正确。
+后端网表与综合后的网表对比做形式验证。保证后端没有引入逻辑错误。
+做ECO的时候，ECO后的网表与ECO后的RTL做形式验证。（ECO当芯片已经流片出去了，工厂只做了一个底层，但金属层还没做可以做metalECO，发现某些容易修的bug后可以利用一些冗余的cell改变某些连线来修掉这个Bug，修改后端网表的同时对RTL也进行相应修改，然后将这两个文件进行LEC比较）
+
+
+  形式验证的流程
+  #
+
+1.读取综合产生的svf文件,一般在综合的目录下自动生成。
+注意：只有对比综合前的RTL和综合后的网表时候需要这一步
+在terminal输入fm_shell进入形式验证的环境，之后的命令都是在此环境中运行
+set_svf  xxx.svf
+2.读入时序库文件
+read_db -r xxx.db #时序
+3.读取RTL文件并设置顶层
+read_verilog -r  xxx.v        ;# Reference RTL file
+set_top xxx
+4.读取参与比较的网表文件并设置顶层
+read_verilog -i xxx.v           ;# Implementation Gate level file
+set_top xxx
+5.进行匹配与对比
+match
+verify
+6.输出报告
+report_guidance -summary &gt; RPT/summary.rpt
+report_failing &gt; RPT/failing.rpt 
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/fm%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81/%E8%AE%B2%E4%B9%89/">
+  <meta property="og:site_name" content="XMU EDA教程">
+  <meta property="og:title" content="XMU EDA教程">
+  <meta property="og:description" content="形式验证#形式验证介绍#在IC设计中，需要通过DC工具将设计的RTL代码转换为网表，为了验证所生成的网表与RTL的功能是否一致，需要进行形式验证，形式验证是一种等价性检查。 它是一种静态的比较，会遍历所有的组合保证逻辑等价性。
+形式验证的位置#只要设计发生改变(对代码进行改动)
+综合的网表与RTL对比做形式验证。保证综合过程没有逻辑错误。保证综合后的网表正确。 后端网表与综合后的网表对比做形式验证。保证后端没有引入逻辑错误。 做ECO的时候，ECO后的网表与ECO后的RTL做形式验证。（ECO当芯片已经流片出去了，工厂只做了一个底层，但金属层还没做可以做metalECO，发现某些容易修的bug后可以利用一些冗余的cell改变某些连线来修掉这个Bug，修改后端网表的同时对RTL也进行相应修改，然后将这两个文件进行LEC比较） 形式验证的流程#1.读取综合产生的svf文件,一般在综合的目录下自动生成。 注意：只有对比综合前的RTL和综合后的网表时候需要这一步 在terminal输入fm_shell进入形式验证的环境，之后的命令都是在此环境中运行
+set_svf xxx.svf 2.读入时序库文件
+read_db -r xxx.db #时序 3.读取RTL文件并设置顶层
+read_verilog -r xxx.v ;# Reference RTL file set_top xxx 4.读取参与比较的网表文件并设置顶层
+read_verilog -i xxx.v ;# Implementation Gate level file set_top xxx 5.进行匹配与对比
+match verify 6.输出报告
+report_guidance -summary &gt; RPT/summary.rpt report_failing &gt; RPT/failing.rpt">
+  <meta property="og:locale" content="zh">
+  <meta property="og:type" content="website">
+<title>讲义 | XMU EDA教程</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/fm%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81/%E8%AE%B2%E4%B9%89/">
+<link rel="stylesheet" href="/book.min.6c8b9d2a1fc95075ed7da46ca81060b39add8fff6741ac51259f768929281e2c.css" integrity="sha256-bIudKh/JUHXtfaRsqBBgs5rdj/9nQaxRJZ92iSkoHiw=" crossorigin="anonymous">
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.c9683b12f0eaf46c5d0d9867252e75d13f6c50eefc49fa6bae3dc3e7c3087ae7.js" integrity="sha256-yWg7EvDq9GxdDZhnJS510T9sUO78Sfprrj3D58MIeuc=" crossorigin="anonymous"></script>
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/fm%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81/%E8%AE%B2%E4%B9%89/index.xml" title="XMU EDA教程" />
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>XMU EDA教程</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <a href="/docs/%E4%BB%8B%E7%BB%8D/" class="">介绍</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <a href="/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/" class="">前端设计</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-ff0ad6e9724d030785a4407217b340a0" class="toggle"  />
+    <label for="section-ff0ad6e9724d030785a4407217b340a0" class="flex justify-between">
+      <a role="button" class="">Vcs与 Verdi</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/vcs%E4%B8%8Everdi/%E8%AE%B2%E4%B9%89/" class="">讲义</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>实验</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/vcs%E4%B8%8Everdi/%E5%AE%9E%E9%AA%8C/lab01/" class="">Lab01</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/vcs%E4%B8%8Everdi/%E5%AE%9E%E9%AA%8C/lab02/" class="">Lab02</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/vcs%E4%B8%8Everdi/%E5%AE%9E%E9%AA%8C/lab03/" class="">Lab03</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e8eb526aad02643db08729d6f431ccb1" class="toggle"  />
+    <label for="section-e8eb526aad02643db08729d6f431ccb1" class="flex justify-between">
+      <a role="button" class="">Dc综合</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/dc%E7%BB%BC%E5%90%88/%E8%AE%B2%E4%B9%89/" class="">讲义</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>实验</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/dc%E7%BB%BC%E5%90%88/%E5%AE%9E%E9%AA%8C/lab01/" class="">Lab01</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-57702c5447efe143a25e8ad1f85d729f" class="toggle" checked />
+    <label for="section-57702c5447efe143a25e8ad1f85d729f" class="flex justify-between">
+      <a role="button" class="">Fm形式验证</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/fm%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81/%E8%AE%B2%E4%B9%89/" class="active">讲义</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/fm%E5%BD%A2%E5%BC%8F%E9%AA%8C%E8%AF%81/%E5%AE%9E%E9%AA%8C/" class="">实验</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-061d8922e06026b095b9dd44bb5ed364" class="toggle"  />
+    <label for="section-061d8922e06026b095b9dd44bb5ed364" class="flex justify-between">
+      <a role="button" class="">Pt静态时序分析</a>
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <a href="/docs/%E5%90%8E%E7%AB%AF%E8%AE%BE%E8%AE%A1/" class="">后端设计</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-4385aa749b2f1fd40666f51bf054c854" class="toggle"  />
+    <label for="section-4385aa749b2f1fd40666f51bf054c854" class="flex justify-between">
+      <a role="button" class="">Innovus</a>
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6507b1174359122fa8e9511b4bf79971" class="toggle"  />
+    <label for="section-6507b1174359122fa8e9511b4bf79971" class="flex justify-between">
+      <a role="button" class="">Drc与 Lvs</a>
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-7a2e00483f353b029b52dc2a85e91d66" class="toggle"  />
+    <label for="section-7a2e00483f353b029b52dc2a85e91d66" class="flex justify-between">
+      <a role="button" class="">Voltus</a>
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Shortcodes</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/shortcodes/buttons/" class="">Buttons</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/shortcodes/columns/" class="">Columns</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/shortcodes/details/" class="">Details</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/shortcodes/hints/" class="">Hints</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/shortcodes/mermaid/" class="">Mermaid</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/shortcodes/tabs/" class="">Tabs</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/shortcodes/katex/" class="">KaTeX</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts/"  >
+        Blog
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>讲义</h3>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#形式验证介绍">形式验证介绍</a></li>
+    <li><a href="#形式验证的位置">形式验证的位置</a></li>
+    <li><a href="#形式验证的流程">形式验证的流程</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="形式验证">
+  形式验证
+  <a class="anchor" href="#%e5%bd%a2%e5%bc%8f%e9%aa%8c%e8%af%81">#</a>
+</h1>
+<h2 id="形式验证介绍">
+  形式验证介绍
+  <a class="anchor" href="#%e5%bd%a2%e5%bc%8f%e9%aa%8c%e8%af%81%e4%bb%8b%e7%bb%8d">#</a>
+</h2>
+<p>在IC设计中，需要通过DC工具将设计的RTL代码转换为网表，为了验证所生成的网表与RTL的功能是否一致，需要进行形式验证，形式验证是一种等价性检查。
+它是一种静态的比较，会遍历所有的组合保证逻辑等价性。</p>
+<h2 id="形式验证的位置">
+  形式验证的位置
+  <a class="anchor" href="#%e5%bd%a2%e5%bc%8f%e9%aa%8c%e8%af%81%e7%9a%84%e4%bd%8d%e7%bd%ae">#</a>
+</h2>
+<p>只要设计发生改变(对代码进行改动)</p>
+<ul>
+<li>综合的网表与RTL对比做形式验证。保证综合过程没有逻辑错误。保证综合后的网表正确。</li>
+<li>后端网表与综合后的网表对比做形式验证。保证后端没有引入逻辑错误。</li>
+<li>做ECO的时候，ECO后的网表与ECO后的RTL做形式验证。（ECO当芯片已经流片出去了，工厂只做了一个底层，但金属层还没做可以做metalECO，发现某些容易修的bug后可以利用一些冗余的cell改变某些连线来修掉这个Bug，修改后端网表的同时对RTL也进行相应修改，然后将这两个文件进行LEC比较）</li>
+</ul>
+<h2 id="形式验证的流程">
+  形式验证的流程
+  <a class="anchor" href="#%e5%bd%a2%e5%bc%8f%e9%aa%8c%e8%af%81%e7%9a%84%e6%b5%81%e7%a8%8b">#</a>
+</h2>
+<p>1.读取综合产生的svf文件,一般在综合的目录下自动生成。
+<code>注意：只有对比综合前的RTL和综合后的网表时候需要这一步</code>
+在terminal输入fm_shell进入形式验证的环境，之后的命令都是在此环境中运行</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span>set_svf  xxx.svf
+</span></span></code></pre></div><p>2.读入时序库文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span>read_db <span style="color:#f92672">-</span>r xxx.db <span style="color:#960050;background-color:#1e0010">#</span>时序
+</span></span></code></pre></div><p>3.读取RTL文件并设置顶层</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span>read_verilog <span style="color:#f92672">-</span>r  xxx.v        <span style="color:#66d9ef">;</span><span style="color:#75715e"># Reference RTL file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set_top xxx
+</span></span></code></pre></div><p>4.读取参与比较的网表文件并设置顶层</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span>read_verilog <span style="color:#f92672">-</span>i xxx.v           <span style="color:#66d9ef">;</span><span style="color:#75715e"># Implementation Gate level file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set_top xxx
+</span></span></code></pre></div><p>5.进行匹配与对比</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span>match
+</span></span><span style="display:flex;"><span>verify
+</span></span></code></pre></div><p>6.输出报告</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span>report_guidance <span style="color:#f92672">-</span>summary <span style="color:#f92672">&gt;</span> RPT<span style="color:#f92672">/</span>summary.rpt
+</span></span><span style="display:flex;"><span>report_failing <span style="color:#f92672">&gt;</span> RPT<span style="color:#f92672">/</span>failing.rpt 
+</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#形式验证介绍">形式验证介绍</a></li>
+    <li><a href="#形式验证的位置">形式验证的位置</a></li>
+    <li><a href="#形式验证的流程">形式验证的流程</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

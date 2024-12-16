@@ -11,12 +11,7 @@ weight: 33
 ---
 
 ### **DC 综合的流程**
-
 导入库文件 → 读取 RTL → 读取约束文件 → 设计综合 → 设计分析 → 文件输出
-
-<div style="text-align: center;">
-  <img src="image.png" alt="DC综合流程图" style="width: 60%; margin: 10px auto;" />
-</div>
 
 ---
 
