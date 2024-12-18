@@ -7,7 +7,6 @@ title: "介绍"
 
 # 介绍
 
-{{% columns %}}
 ## 教程目的
 
 厦门大学EDA全流程教学，分为前端和后端两部分
@@ -18,13 +17,10 @@ title: "介绍"
  * 后端：
 后端设计流程学习。包括Floorplanning and Partitioning、Placement、Clock-tree Synthesis、Routing、Physical Verification、Static timing analysis和Formal Check，输出GDSII文件。
 
-<--->
-
 ## 使用工具
 
 VCS、Verdi、DesignCompiler、Innovus、Calibre、Volutus
 
-{{% /columns %}}
 
 {{% hint info %}}
 **Markdown content**  

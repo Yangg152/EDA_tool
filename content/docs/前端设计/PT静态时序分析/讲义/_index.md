@@ -166,3 +166,22 @@ report_annotated_parasitics
 报告反标率
 real nets中的complete net需要保证100%的coverage  
 如果设计里面的反标率不是100%，代表设计里的某些net上其实是没有延迟的，最后得到的结果是不准确的。
+
+### 第二步、创建时序路径
+STA是基于时序路径去产生时序报告的，每条时序路径都能找到起点和终点。
+起点：输入端口和时序器件的CLK端
+终点：输出端口和时序器件的date、input端
+时序路径可以分为4类：  
+1、输入端到触发器数据输入（in2reg）     
+![Alt text](image-6.png)  
+2、触发器时钟输入到触发器数据输入（reg2reg）  
+![Alt text](image-7.png)  
+3、触发器时钟输入到输出端（reg2out）  
+![Alt text](image-8.png)  
+4、输入端到输出端（in2out）   
+![Alt text](image-9.png)  
+
+ 
+
+
+

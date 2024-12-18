@@ -127,7 +127,7 @@
 <link rel="canonical" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/pt%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90/%E8%AE%B2%E4%B9%89/">
 <link rel="stylesheet" href="/book.min.6c8b9d2a1fc95075ed7da46ca81060b39add8fff6741ac51259f768929281e2c.css" integrity="sha256-bIudKh/JUHXtfaRsqBBgs5rdj/9nQaxRJZ92iSkoHiw=" crossorigin="anonymous">
   <script defer src="/fuse.min.js"></script>
-  <script defer src="/en.search.min.5d2935943f527202f0b156e3570906533d1881947272dd090bd538fa3606709d.js" integrity="sha256-XSk1lD9ScgLwsVbjVwkGUz0YgZRyct0JC9U4&#43;jYGcJ0=" crossorigin="anonymous"></script>
+  <script defer src="/en.search.min.f8a7534a8cb36ad7f78bcb0a01a98a06b198851b949a21749f46d34b77e31d38.js" integrity="sha256-&#43;KdTSoyzatf3i8sKAamKBrGYhRuUmiF0n0bTS3fjHTg=" crossorigin="anonymous"></script>
 <link rel="alternate" type="application/rss+xml" href="http://localhost:1313/docs/%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1/pt%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90/%E8%AE%B2%E4%B9%89/index.xml" title="XMU EDA教程" />
 <!--
 Made with Book Theme
@@ -752,6 +752,7 @@ https://github.com/alex-shpak/hugo-book
     <li><a href="#sta分析流程">STA分析流程</a>
       <ul>
         <li><a href="#第一步读入文件">第一步、读入文件</a></li>
+        <li><a href="#第二步创建时序路径">第二步、创建时序路径</a></li>
       </ul>
     </li>
   </ul>
@@ -1020,6 +1021,22 @@ Hold Time：指信号在时钟沿到达之后，必须保持稳定的时间窗�
 </span></span></code></pre></div><p>报告反标率
 real nets中的complete net需要保证100%的coverage<br>
 如果设计里面的反标率不是100%，代表设计里的某些net上其实是没有延迟的，最后得到的结果是不准确的。</p>
+<h3 id="第二步创建时序路径">
+  第二步、创建时序路径
+  <a class="anchor" href="#%e7%ac%ac%e4%ba%8c%e6%ad%a5%e5%88%9b%e5%bb%ba%e6%97%b6%e5%ba%8f%e8%b7%af%e5%be%84">#</a>
+</h3>
+<p>STA是基于时序路径去产生时序报告的，每条时序路径都能找到起点和终点。
+起点：输入端口和时序器件的CLK端
+终点：输出端口和时序器件的date、input端
+时序路径可以分为4类：<br>
+1、输入端到触发器数据输入（in2reg）  <br>
+<img src="image-6.png" alt="Alt text" /><br>
+2、触发器时钟输入到触发器数据输入（reg2reg）<br>
+<img src="image-7.png" alt="Alt text" /><br>
+3、触发器时钟输入到输出端（reg2out）<br>
+<img src="image-8.png" alt="Alt text" /><br>
+4、输入端到输出端（in2out）<br>
+<img src="image-9.png" alt="Alt text" /></p>
 </article>
  
       
@@ -1069,6 +1086,7 @@ real nets中的complete net需要保证100%的coverage<br>
     <li><a href="#sta分析流程">STA分析流程</a>
       <ul>
         <li><a href="#第一步读入文件">第一步、读入文件</a></li>
+        <li><a href="#第二步创建时序路径">第二步、创建时序路径</a></li>
       </ul>
     </li>
   </ul>
