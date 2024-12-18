@@ -711,23 +711,23 @@ dc_shell> optimize_netlist
 
 ### 第五步、设计分析  
 ```tcl
-check_design
+dc_shell> check_design
 ```
 用check_design检查设计中是否存在其他隐患问题
 ```tcl
-check_timing
+dc_shell> check_timing
 ```
 用check_timing检查设计中是否有路径没有被约束，每一条路径都应该约束到，如果真的有哪一条不需要约束也应该设置成false path。
 ```tcl
-report_qor
+dc_shell> report_qor
 ```
 用report_qor查看整体综合后的summary结果
 ```tcl
-report_area
+dc_shell> report_area
 ```
 用report_area查看综合后得到的面积
 ```tcl
-report_timing
+dc_shell> report_timing
 ```
 用report_timing查看具体的setup/hold时序信息。
 **具体案例分析**  
@@ -742,16 +742,16 @@ report_timing
 ### 第六步、文件输出
 1. 保存网表
 ```tcl
-write_file -f verilog -output xxx.v
+dc_shell> write_file -f verilog -output xxx.v
 ```
 2. 保存ddc文件
 ```tcl
-write_file -f ddc -output xxx.ddc
-read_ddc xxx.ddc
+dc_shell> write_file -f ddc -output xxx.ddc
+dc_shell> read_ddc xxx.ddc
 ```
 ddc文件是dc的数据格式，保存后下次可以直接加载查看结果。不需要重新综合。可以通过read_ddc命令直接读取
 3.写出综合后的sdf文件
 ```tcl
-write_sdc xxx.sdc
+dc_shell> write_sdc xxx.sdc
 ```
 

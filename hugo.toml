@@ -7,3 +7,7 @@ theme = "hugo-book"
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+
+[params]
+  bookMenuDepth = 4
+
